@@ -1,0 +1,14 @@
+{
+    "Test Loss": 0.05477084219455719,
+    "Test MSE": 0.05477084219455719,
+    "Hyperparameters": {
+        "n_centers": 68,
+        "gamma": 0.15100000000000002,
+        "learning_rate": 0.020050000000000002,
+        "batch_size": 18,
+        "tuner/epochs": 50,
+        "tuner/initial_epoch": 0,
+        "tuner/bracket": 0,
+        "tuner/round": 0
+    }
+}
