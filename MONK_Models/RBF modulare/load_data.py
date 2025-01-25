@@ -30,7 +30,7 @@ def load_monk_data(file_path):
     return np.array(data)
 
 
-def splitted_monk_data(monk):
+def load_and_preprocess_data_MONK(monk):
     # Load train and test datasets
     train_data = load_monk_data(f"{monk}.train")
     test_data = load_monk_data(f"{monk}.test")
@@ -43,4 +43,4 @@ def splitted_monk_data(monk):
 
     # Split training data into train and validation sets
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
-    return X_train, y_train, X_val, y_val, X_test, y_test
+    return X_train, X_val, X_test, y_train, y_val, y_test
