@@ -4,7 +4,7 @@ from model_training import *
 import keras
 import pandas as pd
 
-def CV(X_train, X_test, Y_train, Y_test):
+def CV(X_train, X_test, Y_train, Y_test, task, model):
     kfold = KFold(n_splits=5, shuffle=True, random_state=42)
     fold_no = 1
     hyperparameters_summary = []
@@ -14,13 +14,13 @@ def CV(X_train, X_test, Y_train, Y_test):
         y_train, y_val = Y_train[train_idx], Y_train[val_idx]
 
         if task == "CUP" & model == "Ridge":
-            model, tuner = train_model(fold_no, build_model_ridge_ranged, x_train, y_train, x_val, y_val)
+            model, tuner = train_model_ridge_ranged(fold_no, build_model_ridge_ranged, x_train, y_train, x_val, y_val)
         elif task == "MONK" & model == "Ridge":
-            model, tuner = train_model(fold_no, build_rbf_model_tuner_MONK, x_train, y_train, x_val, y_val)
+            model, tuner = train_model_ridge_ranged(fold_no, build_model_ridge_ranged, x_train, y_train, x_val, y_val)
         elif task == "CUP" & model == "NN":
-            model, tuner = train_model(fold_no, build_rbf_model_tuner_CUP, x_train, y_train, x_val, y_val)
+            model, tuner = train_model_nn_ranged(fold_no, build_model_nn_ranged, x_train, y_train, x_val, y_val)
         elif task == "MONK" & model == "NN":
-            model, tuner = train_model(fold_no, build_rbf_model_tuner_CUP, x_train, y_train, x_val, y_val)
+            model, tuner = train_model_nn_ranged(fold_no, build_model_ridge_ranged, x_train, y_train, x_val, y_val)
         
         best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
         batch_size = best_hps.get('batch_size')
@@ -44,7 +44,12 @@ def CV(X_train, X_test, Y_train, Y_test):
     
     hyperparameters_df = pd.DataFrame(hyperparameters_summary)
     hyperparameters_df.to_csv('best_hyperparameters_per_fold.csv', index=False)
-    final_model = build_model(best_hparams)
+    
+    if model == "Ridge":
+        final_model = build_model_ridge_ranged(best_hparams)
+    elif model == "NN":
+        final_model = build_model_nn_ranged(best_hparams)
+    
     final_history = final_model.fit(
         X_train, Y_train,
         batch_size=best_hps.get('batch_size'),

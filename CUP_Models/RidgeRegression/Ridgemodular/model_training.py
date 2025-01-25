@@ -29,3 +29,14 @@ def train_model(fold_no, build_model, x_train, y_train, x_val, y_val):
     except Exception as e:
         print(f"Errore durante il training: {str(e)}")
         raise
+
+def train_fixed(model, batch_size, X_train, X_val, Y_train, Y_val):
+    final_history = model.fit(
+        X_train, Y_train,
+        batch_size=batch_size,
+        epochs=200,  # Puoi regolare il numero di epoche
+        validation_data=(X_val, Y_val),  # Usa il test set per la validazione finale
+        callbacks=[keras.callbacks.EarlyStopping('val_loss', patience=5)]
+    )
+
+    return final_history

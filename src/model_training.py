@@ -30,7 +30,7 @@ def train_model_nn_ranged(fold_no, build_model, x_train, y_train, x_val, y_val):
         print(f"Errore durante il training: {str(e)}")
         raise
 
-def train_nn_fixed(model, batch_size, X_train, X_val, Y_train, Y_val):
+def train_model_nn_fixed(model, batch_size, X_train, X_val, Y_train, Y_val):
     final_history = model.fit(
         X_train, Y_train,
         batch_size=batch_size,
