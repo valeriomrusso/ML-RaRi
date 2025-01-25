@@ -1,6 +1,6 @@
 from tensorflow import keras
 
-def build_model(hp, batch_size, units, dropout, num_layers, units_hidden, learning_rate, momentum):
+def build_model(hp):
     """Costruisce il modello con iperparametri configurabili."""
     model = keras.Sequential()
     

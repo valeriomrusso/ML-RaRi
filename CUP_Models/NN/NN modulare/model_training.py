@@ -1,14 +1,17 @@
 import keras_tuner as kt
 import keras
+import tempfile
 
 def train_model(fold_no, build_model, x_train, y_train, x_val, y_val):
     """Training con gestione errori"""
     try:
+        temp_dir = tempfile.mkdtemp()
         tuner = kt.RandomSearch(
         build_model,
         objective='val_loss',
         max_trials=50,  # Più prove per una maggiore diversità
-        directory='tuner_results',
+        overwrite=True,
+        directory=temp_dir,
         project_name=f'fold_{fold_no}'
         )
         
