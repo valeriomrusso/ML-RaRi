@@ -1,10 +1,5 @@
-from sklearn.model_selection import KFold, train_test_split
 from load_data import load_and_preprocess_data_CUP
-from model_builder import build_model
-from model_training import train_model
 from plots import plot_training_history_CUP
-import keras
-import pandas as pd
 from cross_validation import CV
 
 def main():

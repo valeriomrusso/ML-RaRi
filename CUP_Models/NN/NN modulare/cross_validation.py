@@ -8,7 +8,6 @@ def CV(X_train, X_test, Y_train, Y_test):
     fold_no = 1
     hyperparameters_summary = []
     best_val_loss = float('inf')  # Inizializza con infinito
-    best_history = None
     for train_idx, val_idx in kfold.split(X_train):
         x_train, x_val = X_train[train_idx], X_train[val_idx]
         y_train, y_val = Y_train[train_idx], Y_train[val_idx]
@@ -18,22 +17,19 @@ def CV(X_train, X_test, Y_train, Y_test):
         best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
         batch_size = best_hps.get('batch_size')
         
-        history = model.fit(
-            x_train, y_train,
-            batch_size=batch_size,
-            epochs=200,
-            validation_data=(x_val, y_val),
-            callbacks=[keras.callbacks.EarlyStopping('val_loss', patience=5)]
-        )
+        best_model = tuner.get_best_models(num_models=1)[0]
+        
+        val_loss= best_model.evaluate(x_val, y_val, verbose=0)
+        train_loss = best_model.evaluate(x_train, y_train, verbose=0)
         
         best_hps_dict = best_hps.values
         best_hps_dict['fold'] = fold_no  # Aggiungi il numero del fold
-        best_hps_dict['train_loss'] = history.history['loss'][-1]
-        best_hps_dict['val_loss'] = history.history['val_loss'][-1]
+        best_hps_dict['train_loss'] = train_loss
+        best_hps_dict['val_loss'] = val_loss
         hyperparameters_summary.append(best_hps_dict)
 
-        if history.history['val_loss'][-1]< best_val_loss:
-            best_val_loss = history.history['val_loss'][-1]
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
             best_hparams = best_hps
     
         fold_no += 1
