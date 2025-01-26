@@ -18,15 +18,11 @@ def plot_training_history_CUP(history, path, window_size=5):
     plt.savefig(f'{path}/training_history_CUP.png')
     plt.close()
 
-def plot_training_history_Monk(history, model, X_train, y_train, X_test, y_test, path):
+def plot_training_history_Monk(history, path):
     train_accuracies = history.history['accuracy']
     test_accuracies = history.history['val_accuracy']
-    train_losses = history.history['loss']
-    test_losses = history.history['val_loss']
-
-    # Compute mean squared error
-    train_mse = [mean_squared_error(y_train, model.predict(X_train))]*len(train_accuracies)
-    test_mse = [mean_squared_error(y_test, model.predict(X_test))]*len(test_accuracies)
+    train_mse = history.history['mse']
+    test_mse = history.history['val_mse']
 
     # Plot
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
@@ -54,7 +50,7 @@ def plot_training_history_Monk(history, model, X_train, y_train, X_test, y_test,
     plt.suptitle('Performance Rete Neurale MONK-1')
     plt.tight_layout()
     plt.savefig(f'{path}/training_history_MONK.png')
-    plt.show()
+    plt.close()
 
     print(f'Accuratezza Train finale: {train_accuracies[-1]:.4f}')
     print(f'Accuratezza Test finale: {test_accuracies[-1]:.4f}')

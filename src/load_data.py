@@ -32,8 +32,8 @@ def load_monk_data(file_path):
 
 def splitted_monk_data(monk):
     # Load train and test datasets
-    train_data = load_monk_data(f"./{monk}.train")
-    test_data = load_monk_data(f"{monk}.test")
+    train_data = load_monk_data(f"./datasets/{monk}.train")
+    test_data = load_monk_data(f"./datasets/{monk}.test")
 
     # Extract features and target
     X_train = train_data[:, 1:]
