@@ -1,2 +1,0 @@
-batch_size,units,dropout,num_layers,units_hidden,learning_rate,momentum,fold,train_loss,val_loss
-16,224,0.0,2,160,0.006189539451443283,0.9,4,0.03455474227666855,0.083304263651371

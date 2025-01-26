@@ -1,11 +1,15 @@
-from load_data import load_and_preprocess_data_CUP
+from load_data import *
 from plots import plot_training_history_CUP
 from model_builder import build_model_nn_fixed
-from model_training import train_model_nn_fixed
-import pandas as pd
+from model_training import train_model_fixed
+from build_csv import csv_builder
+import os
+from datetime import datetime
 
 def main():
-    filepath = 'ML-CUP24-TR.csv'
+    task = 'CUP'
+    monktype = 1
+
     units = 160
     dropout = 0.1
     num_layers = 4
@@ -14,11 +18,21 @@ def main():
     momentum = 0.9
     reg = 0.00005
     batch_size = 80
+    
+    if task == 'CUP':
+        filepath = './datasets/ML-CUP24-TR.csv'
+        X_train, X_test, Y_train, Y_test, _, _ = load_and_preprocess_data_CUP(filepath)
+    elif task == 'MONK':
+        filepath = f"monks-{monktype}"
+        X_train, X_test, Y_train, Y_test = splitted_monk_data(filepath)
 
-    X_train, X_test, Y_train, Y_test, _, _ = load_and_preprocess_data_CUP(filepath)
-    final_model = build_model_nn_fixed(units, dropout, num_layers, units_hidden, learning_rate, momentum, reg)
-    history = train_model_nn_fixed(final_model, batch_size, X_train, X_test, Y_train, Y_test)
-    plot_training_history_CUP(history)
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    path = f'./results/nn_fixed_{task}_{timestamp}'
+    os.makedirs(path, exist_ok=True)
+
+    final_model = build_model_nn_fixed(units, dropout, num_layers, units_hidden, learning_rate, momentum, reg, task)
+    history = train_model_fixed(final_model, batch_size, X_train, X_test, Y_train, Y_test)
+    plot_training_history_CUP(history, path)
 
     final_dict = {}
     final_dict['batch_size'] = batch_size
@@ -31,8 +45,7 @@ def main():
     final_dict['reg'] = reg
     final_dict['train_loss'] = history.history['loss'][-1]
     final_dict['test_loss'] = history.history['val_loss'][-1]
-    final_model_df = pd.DataFrame(final_dict, index=[0])
-    final_model_df.to_csv('best_hps_model_fixed.csv', index=False)
+    csv_builder(f'{path}/best_hps_model_fixed.csv', final_dict)
 
 
 if __name__ == "__main__":

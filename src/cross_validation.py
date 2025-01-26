@@ -1,10 +1,11 @@
 from sklearn.model_selection import KFold
 from model_builder import *
 from model_training import *
+from build_csv import csv_builder
 import keras
 import pandas as pd
 
-def CV(X_train, X_test, Y_train, Y_test, task, model):
+def CV(X_train, X_test, Y_train, Y_test, task, model, path):
     kfold = KFold(n_splits=5, shuffle=True, random_state=42)
     fold_no = 1
     hyperparameters_summary = []
@@ -13,14 +14,10 @@ def CV(X_train, X_test, Y_train, Y_test, task, model):
         x_train, x_val = X_train[train_idx], X_train[val_idx]
         y_train, y_val = Y_train[train_idx], Y_train[val_idx]
 
-        if task == "CUP" & model == "Ridge":
-            model, tuner = train_model_ridge_ranged(fold_no, build_model_ridge_ranged, x_train, y_train, x_val, y_val)
-        elif task == "MONK" & model == "Ridge":
-            model, tuner = train_model_ridge_ranged(fold_no, build_model_ridge_ranged, x_train, y_train, x_val, y_val)
-        elif task == "CUP" & model == "NN":
-            model, tuner = train_model_nn_ranged(fold_no, build_model_nn_ranged, x_train, y_train, x_val, y_val)
-        elif task == "MONK" & model == "NN":
-            model, tuner = train_model_nn_ranged(fold_no, build_model_ridge_ranged, x_train, y_train, x_val, y_val)
+        if model == "Ridge":
+            model, tuner = train_model_ranged(fold_no, build_model_ridge_ranged, x_train, y_train, x_val, y_val, task)
+        elif model == "NN":
+            model, tuner = train_model_ranged(fold_no, build_model_nn_ranged, x_train, y_train, x_val, y_val, task)
         
         best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
         batch_size = best_hps.get('batch_size')
@@ -41,14 +38,13 @@ def CV(X_train, X_test, Y_train, Y_test, task, model):
             best_hparams = best_hps
     
         fold_no += 1
-    
-    hyperparameters_df = pd.DataFrame(hyperparameters_summary)
-    hyperparameters_df.to_csv('best_hyperparameters_per_fold.csv', index=False)
-    
+
+    csv_builder(f'{path}/best_hyperparameters_per_fold.csv', best_hps_dict)
+
     if model == "Ridge":
-        final_model = build_model_ridge_ranged(best_hparams)
+        final_model = build_model_ridge_ranged(best_hparams, task)
     elif model == "NN":
-        final_model = build_model_nn_ranged(best_hparams)
+        final_model = build_model_nn_ranged(best_hparams, task)
     
     final_history = final_model.fit(
         X_train, Y_train,
@@ -60,6 +56,8 @@ def CV(X_train, X_test, Y_train, Y_test, task, model):
     final_dict = best_hparams.values
     final_dict['train_loss'] = final_history.history['loss'][-1]
     final_dict['val_loss'] = final_history.history['val_loss'][-1]
-    final_model_df = pd.DataFrame(final_dict, index=[0])
-    final_model_df.to_csv('best_hyperparameters_final_model.csv', index=False)
+    if task == 'MONK':
+        final_dict['accuracy'] = final_history.history['accuracy'][-1]
+        final_dict['val_accuracy'] = final_history.history['val_accuracy'][-1]  
+    csv_builder(f'{path}/best_hyperparameters_final_model.csv', final_dict)
     return final_history, final_model

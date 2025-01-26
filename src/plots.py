@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.metrics import accuracy_score, mean_squared_error
-def plot_training_history_CUP(history, window_size=5):
+def plot_training_history_CUP(history, path, window_size=5):
     """Visualizza l'andamento del training."""
     fig, (ax1) = plt.subplots(1, 1, figsize=(12, 5))
     
@@ -15,10 +15,10 @@ def plot_training_history_CUP(history, window_size=5):
     ax1.grid()
     
     plt.tight_layout()
-    plt.savefig('training_history.png')
+    plt.savefig(f'{path}/training_history_CUP.png')
     plt.close()
 
-def plot_training_history_Monk(history, model, X_train, y_train, X_test, y_test):
+def plot_training_history_Monk(history, model, X_train, y_train, X_test, y_test, path):
     train_accuracies = history.history['accuracy']
     test_accuracies = history.history['val_accuracy']
     train_losses = history.history['loss']
@@ -53,7 +53,7 @@ def plot_training_history_Monk(history, model, X_train, y_train, X_test, y_test)
 
     plt.suptitle('Performance Rete Neurale MONK-1')
     plt.tight_layout()
-    plt.savefig('training_history.png')
+    plt.savefig(f'{path}/training_history_MONK.png')
     plt.show()
 
     print(f'Accuratezza Train finale: {train_accuracies[-1]:.4f}')
