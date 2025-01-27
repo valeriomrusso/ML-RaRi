@@ -3,6 +3,12 @@ import keras
 import tempfile
 from model_builder import build_model_nn_ranged_tuner, build_model_ridge_ranged_tuner
 
+class MyTuner(kt.tuners.RandomSearch):
+  def run_trial(self, trial, *args, **kwargs):
+    kwargs['batch_size'] = trial.hyperparameters.Int('batch_size', min_value = 1, max_value = 25)
+    #kwargs['epochs'] = trial.hyperparameters.Int('epochs', 10, 30)
+    return super(MyTuner, self).run_trial(trial, *args, **kwargs)
+
 def train_model_ranged(fold_no, build_model, x_train, y_train, x_val, y_val, task):
     """Training con gestione errori"""
     try:
@@ -15,7 +21,7 @@ def train_model_ranged(fold_no, build_model, x_train, y_train, x_val, y_val, tas
         elif task == 'MONK':
             objective = 'val_accuracy'
         temp_dir = tempfile.mkdtemp()
-        tuner = kt.RandomSearch(
+        tuner = MyTuner(
         build_fn,
         objective=objective,
         max_trials=50,  # Più prove per una maggiore diversità
