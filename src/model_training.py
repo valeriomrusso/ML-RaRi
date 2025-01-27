@@ -10,12 +10,15 @@ def train_model_ranged(fold_no, build_model, x_train, y_train, x_val, y_val, tas
             build_fn = build_model_nn_ranged_tuner(task)
         elif build_model == build_model_ridge_ranged_tuner:
             build_fn = build_model_ridge_ranged_tuner(task)
-
+        if task == 'CUP':
+            objective = 'val_loss'
+        elif task == 'MONK':
+            objective = 'val_accuracy'
         temp_dir = tempfile.mkdtemp()
         tuner = kt.RandomSearch(
         build_fn,
-        objective='val_loss',
-        max_trials=10,  # Più prove per una maggiore diversità
+        objective=objective,
+        max_trials=50,  # Più prove per una maggiore diversità
         overwrite=True,
         directory=temp_dir,
         project_name=f'fold_{fold_no}'

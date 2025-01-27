@@ -29,18 +29,22 @@ def CV(X_train, X_test, Y_train, Y_test, task, model, path):
         
         best_hps_dict = best_hps.values
         best_hps_dict['fold'] = fold_no  # Aggiungi il numero del fold
-        best_hps_dict['train_loss'] = train_result[0]
-        best_hps_dict['val_loss'] = val_result[0]
+        
         if task == 'MONK':
             best_hps_dict['accuracy'] =  train_result[1]
             best_hps_dict['val_accuracy'] = val_result[1]
             best_hps_dict['mse'] = train_result[2]
             best_hps_dict['val_mse'] = val_result[2]
+            if best_hps_dict['val_accuracy'] < best_val_loss:
+                best_val_loss = best_hps_dict['val_accuracy']
+                best_hparams = best_hps
+        elif task == 'CUP':
+            best_hps_dict['mse'] = train_result[1]
+            best_hps_dict['val_mse'] = val_result[1]
+            if best_hps_dict['val_mse'] < best_val_loss:
+                best_val_loss = best_hps_dict['val_mse']
+                best_hparams = best_hps
         hyperparameters_summary.append(best_hps_dict)
-
-        if val_result[1] < best_val_loss:
-            best_val_loss = val_result[1]
-            best_hparams = best_hps
     
         fold_no += 1
 
@@ -61,12 +65,10 @@ def CV(X_train, X_test, Y_train, Y_test, task, model, path):
         callbacks=[keras.callbacks.EarlyStopping('val_loss', patience=5)]
     )
     final_dict = best_hparams.values
-    final_dict['train_loss'] = final_history.history['loss'][-1]
-    final_dict['val_loss'] = final_history.history['val_loss'][-1]
+    final_dict['mse'] = final_history.history['mse'][-1]
+    final_dict['val_mse'] = final_history.history['val_mse'][-1]
     if task == 'MONK':
         final_dict['accuracy'] = final_history.history['accuracy'][-1]
         final_dict['val_accuracy'] = final_history.history['val_accuracy'][-1]  
-        final_dict['mse'] = final_history.history['mse'][-1]
-        final_dict['val_mse'] = final_history.history['val_mse'][-1]
     csv_builder(f'{path}/best_hyperparameters_final_model.csv', final_dict)
     return final_history, final_model

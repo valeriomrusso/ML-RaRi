@@ -41,4 +41,9 @@ def splitted_monk_data(monk):
     X_test = test_data[:, 1:]
     Y_test = test_data[:, 0]
 
+    scalerX = StandardScaler().fit(X_train)
+    X_train = scalerX.transform(X_train)
+    X_test = scalerX.transform(X_test)
+
+
     return X_train, X_test, Y_train, Y_test

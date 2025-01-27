@@ -12,16 +12,18 @@ def NN(task, monktype=None, fixed=None, units=None, dropout=None, num_layers= No
     if task == 'CUP':
         filepath = './datasets/ML-CUP24-TR.csv'
         X_train, X_test, Y_train, Y_test, _, _ = load_and_preprocess_data_CUP(filepath)
+        name = task
     elif task == 'MONK':
         filepath = f"monks-{monktype}"
         X_train, X_test, Y_train, Y_test = splitted_monk_data(filepath)
+        name = f'{task}{monktype}'
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     if fixed:
         p = "fixed"
     else:
         p = "ranged"
-    path = f'./results/nn_{p}_{task}_{timestamp}'
+    path = f'./results/nn_{p}_{name}_{timestamp}'
     os.makedirs(path, exist_ok=True)
 
     if fixed:
