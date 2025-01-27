@@ -20,8 +20,6 @@ def build_model_nn_ranged_tuner(task):
         model = keras.Sequential()
         reg = hp.Float('lambda', 1e-6, 1e-2, sampling='log')
 
-        batch_size = hp.Int('batch_size', 16, 128, step = 4)
-
         # Livello di input esplicito
         model.add(keras.layers.Input(shape=input_shape))
         
@@ -119,9 +117,6 @@ def build_model_ridge_ranged_tuner(task):
             actfun = 'sigmoid'
             metrics=['accuracy', 'mse']
             loss = 'binary_crossentropy'
-
-        
-        batch_size = hp.Int('batch_size', 16, 128, step = 4)
 
         model = keras.Sequential()
         reg = hp.Float('regularizer', min_value=1e-6, max_value=1, sampling="log")
