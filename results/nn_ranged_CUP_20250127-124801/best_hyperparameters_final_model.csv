@@ -1,2 +1,0 @@
-lambda,batch_size,units,dropout,num_layers,units_hidden,learning_rate,fold,mse,val_mse
-1.5954125711854483e-05,128,128,0.1,1,128,0.00952696747033435,5,0.07302220165729523,0.09295078366994858

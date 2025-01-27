@@ -5,7 +5,7 @@ from model_builder import build_model_nn_ranged_tuner, build_model_ridge_ranged_
 
 class MyTuner(kt.tuners.RandomSearch):
   def run_trial(self, trial, *args, **kwargs):
-    kwargs['batch_size'] = trial.hyperparameters.Int('batch_size', 16, 128, step = 4)
+    kwargs['batch_size'] = trial.hyperparameters.Int('batch_size', 8, 32, step = 2)
     #kwargs['epochs'] = trial.hyperparameters.Int('epochs', 10, 30)
     return super(MyTuner, self).run_trial(trial, *args, **kwargs)
 
@@ -24,7 +24,7 @@ def train_model_ranged(fold_no, build_model, x_train, y_train, x_val, y_val, tas
         tuner = MyTuner(
         build_fn,
         objective=objective,
-        max_trials=50,  # Più prove per una maggiore diversità
+        max_trials=2,  # Più prove per una maggiore diversità
         overwrite=True,
         directory=temp_dir,
         project_name=f'fold_{fold_no}'

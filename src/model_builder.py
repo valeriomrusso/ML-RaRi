@@ -1,5 +1,7 @@
-from tensorflow import keras
+import keras
 from keras import regularizers
+import tensorflow as tf
+import numpy as np
 
 def build_model_nn_ranged_tuner(task):
     def build_model(hp):
@@ -8,7 +10,7 @@ def build_model_nn_ranged_tuner(task):
             output_shape = 3
             actfun = 'linear'
             loss = 'mse'
-            metrics=['mse']
+            metrics=['mse', mean_euclidean_error]
         elif task == 'MONK':
             input_shape = (6,)
             output_shape = 1
@@ -65,7 +67,7 @@ def build_model_nn_fixed(units, dropout, num_layers, units_hidden, learning_rate
         input_shape = (12,)
         output_shape = 3
         actfun = 'linear'
-        metrics=['mse']
+        metrics=['mse', mean_euclidean_error]
         loss = 'mse'
     elif task == 'MONK':
         input_shape = (6,)
@@ -109,7 +111,7 @@ def build_model_ridge_ranged_tuner(task):
             input_shape = (12,)
             output_shape = 3
             actfun = 'linear'
-            metrics=['mse']
+            metrics=['mse', mean_euclidean_error]
             loss = 'mse'
         elif task == 'MONK':
             input_shape = (6,)
@@ -131,7 +133,7 @@ def build_model_ridge_fixed(reg, learning_rate, task):
         input_shape = (12,)
         output_shape = 3
         actfun = 'linear'
-        metrics=['mse']
+        metrics=['mse', mean_euclidean_error]
         loss = 'mse'
     elif task == 'MONK':
         input_shape = (6,)
@@ -145,3 +147,13 @@ def build_model_ridge_fixed(reg, learning_rate, task):
     model.add(keras.layers.Dense(output_shape, kernel_regularizer= keras.regularizers.l2(reg), activation= actfun))
     model.compile(loss=loss, optimizer = keras.optimizers.Adam(learning_rate), metrics=metrics)
     return model
+
+import numpy as np
+
+def mean_euclidean_error(y_true, y_pred):
+    # Calcola la differenza quadrata tra y_pred e y_true
+    diff = tf.square(y_pred - y_true)
+    # Calcola la media lungo l'asse delle dimensioni specificate
+    mean_diff = tf.reduce_mean(diff, axis=-1)
+    # Calcola la radice quadrata
+    return tf.sqrt(mean_diff)

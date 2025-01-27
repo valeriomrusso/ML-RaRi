@@ -11,7 +11,7 @@ def NN(task, monktype=None, fixed=None, units=None, dropout=None, num_layers= No
 
     if task == 'CUP':
         filepath = './datasets/ML-CUP24-TR.csv'
-        X_train, X_test, Y_train, Y_test, _, _ = load_and_preprocess_data_CUP(filepath)
+        X_train, X_test, Y_train, Y_test, scalerX, scalerY = load_and_preprocess_data_CUP(filepath)
         name = task
     elif task == 'MONK':
         filepath = f"monks-{monktype}"
@@ -38,18 +38,21 @@ def NN(task, monktype=None, fixed=None, units=None, dropout=None, num_layers= No
         final_dict['learning_rate'] = learning_rate
         final_dict['momentum'] = momentum
         final_dict['reg'] = reg
-        final_dict['train_loss'] = history.history['loss'][-1]
-        final_dict['test_loss'] = history.history['val_loss'][-1]
-        if task == 'MONK':
+        if task == 'CUP':
+            final_dict['mse'] = original_scale(history.history['mse'][-1], scalerY)
+            final_dict['val_mse'] = original_scale(history.history['val_mse'][-1], scalerY)
+            final_dict['mean_euclidean_error'] = original_scale(history.history['mean_euclidean_error'][-1], scalerY)
+            final_dict['val_mean_euclidean_error'] = original_scale(history.history['val_mean_euclidean_error'][-1], scalerY)
+        elif task == 'MONK':
             final_dict['accuracy'] = history.history['accuracy'][-1]
             final_dict['val_accuracy'] = history.history['val_accuracy'][-1]  
             final_dict['mse'] = history.history['mse'][-1]
             final_dict['val_mse'] = history.history['val_mse'][-1]
         csv_builder(f'{path}/best_hps_model_fixed.csv', final_dict)
     else:
-        history, model = CV(X_train, X_test, Y_train, Y_test, task, "NN", path)
+        history, model = CV(X_train, X_test, Y_train, Y_test, scalerY, task, "NN", path)
     
     if task == 'CUP':
-        plot_training_history_CUP(history, path)
+        plot_training_history_CUP(history, scalerY, path)
     elif task == 'MONK':
         plot_training_history_Monk(history, path)

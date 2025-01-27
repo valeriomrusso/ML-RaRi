@@ -1,0 +1,2 @@
+lambda,units,dropout,num_layers,units_hidden,learning_rate,batch_size,fold,mse,val_mse,mean_euclidean_error,val_mean_euclidean_error
+4.03254402823501e-06,64,0.0,3,128,0.00011629015993880012,8,5,[-0.01526225 -0.10227039  8.31665849],[ 0.04186976 -0.05432401  8.88730591],[ 0.08275729 -0.02001033  9.29569985],[0.13070492 0.02022834 9.77461172]

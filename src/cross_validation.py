@@ -1,11 +1,11 @@
 from sklearn.model_selection import KFold
 from model_builder import *
 from model_training import *
-from build_csv import csv_builder
+from build_csv import csv_builder, original_scale
 import keras
 import pandas as pd
 
-def CV(X_train, X_test, Y_train, Y_test, task, model, path):
+def CV(X_train, X_test, Y_train, Y_test, scalerY, task, model, path):
     kfold = KFold(n_splits=5, shuffle=True, random_state=42)
     fold_no = 1
     hyperparameters_summary = []
@@ -35,14 +35,16 @@ def CV(X_train, X_test, Y_train, Y_test, task, model, path):
             best_hps_dict['val_accuracy'] = val_result[1]
             best_hps_dict['mse'] = train_result[2]
             best_hps_dict['val_mse'] = val_result[2]
-            if best_hps_dict['val_accuracy'] < best_val_loss:
-                best_val_loss = best_hps_dict['val_accuracy']
+            if val_result[1] < best_val_loss:
+                best_val_loss = val_result[1]
                 best_hparams = best_hps
         elif task == 'CUP':
-            best_hps_dict['mse'] = train_result[1]
-            best_hps_dict['val_mse'] = val_result[1]
-            if best_hps_dict['val_mse'] < best_val_loss:
-                best_val_loss = best_hps_dict['val_mse']
+            best_hps_dict['mse'] = original_scale(train_result[1], scalerY)
+            best_hps_dict['val_mse'] = original_scale(val_result[1], scalerY)
+            best_hps_dict['mean_euclidean_error'] = original_scale(train_result[2], scalerY)
+            best_hps_dict['val_mean_euclidean_error'] = original_scale(val_result[2], scalerY)
+            if val_result[1] < best_val_loss:
+                best_val_loss = val_result[1]
                 best_hparams = best_hps
         hyperparameters_summary.append(best_hps_dict)
     
@@ -65,10 +67,15 @@ def CV(X_train, X_test, Y_train, Y_test, task, model, path):
         callbacks=[keras.callbacks.EarlyStopping('val_loss', patience=5)]
     )
     final_dict = best_hparams.values
-    final_dict['mse'] = final_history.history['mse'][-1]
-    final_dict['val_mse'] = final_history.history['val_mse'][-1]
-    if task == 'MONK':
+    if task == 'CUP':
+        final_dict['mse'] = original_scale(final_history.history['mse'][-1], scalerY)
+        final_dict['val_mse'] = original_scale(final_history.history['val_mse'][-1], scalerY)
+        final_dict['mean_euclidean_error'] = original_scale(final_history.history['mean_euclidean_error'][-1], scalerY)
+        final_dict['val_mean_euclidean_error'] = original_scale(final_history.history['val_mean_euclidean_error'][-1], scalerY)
+    elif task == 'MONK':
         final_dict['accuracy'] = final_history.history['accuracy'][-1]
         final_dict['val_accuracy'] = final_history.history['val_accuracy'][-1]  
+        final_dict['mse'] = final_history.history['mse'][-1]
+        final_dict['val_mse'] = final_history.history['val_mse'][-1]
     csv_builder(f'{path}/best_hyperparameters_final_model.csv', final_dict)
     return final_history, final_model

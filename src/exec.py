@@ -12,6 +12,6 @@ def main():
     batch_size = 24
     # Task, nmonk, fixed(True, false), task, units, dropout, num_layers, units_hidden, learning_rate, momentum, reg, batch_size
     #NN("CUP", 1, True, units, dropout, num_layers, units_hidden, learning_rate, momentum, reg, batch_size)
-    NN('MONK', 2, False)
+    NN('CUP', 1, False)
 if __name__ == '__main__':
     main()
