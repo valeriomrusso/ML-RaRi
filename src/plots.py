@@ -84,15 +84,3 @@ def plot_training_history_Monk(history, path):
     print(f'Accuratezza Test finale: {test_accuracies[-1]:.4f}')
     print(f'MSE Train finale: {train_mse[-1]:.4f}')
     print(f'MSE Test finale: {test_mse[-1]:.4f}')
-
-    def writeOutput(result, name):
-        df = pd.DataFrame(result)
-        now = datetime.datetime.now()
-        f = open(name, 'w')
-        f.write('# Michele Di Niccola, Valerio Russo\n')
-        f.write('# Rari\n')
-        f.write('# ML-CUP24\n')
-        f.write('# '+str(now.day)+'/'+str(now.month)+'/'+str(now.year)+'\n')
-        df.index += 1 
-        df.to_csv(f, sep=',', encoding='utf-8', header = False)
-        f.close()

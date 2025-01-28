@@ -47,3 +47,17 @@ def splitted_monk_data(monk):
 
 
     return X_train, X_test, Y_train, Y_test
+
+def load_blind_test(train, test):
+    train_data = np.genfromtxt(train, delimiter=',')
+    X = train_data[:, 1:13]
+    Y = train_data[:, 13:16]
+    scalerX = StandardScaler().fit(X)
+    scalerY = StandardScaler().fit(Y)
+    X = scalerX.transform(X)
+    Y = scalerY.transform(Y)
+    test_data = np.genfromtxt(test, delimiter=',')
+    X_test = test_data[:, 1:13]
+    X_test = scalerX.transform(X_test)
+    return X, Y, X_test, scalerY
+    

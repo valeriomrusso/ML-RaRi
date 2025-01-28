@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import datetime
 '''
 def csv_builder_CUP(path, dicthps):
     df = pd.DataFrame(dicthps)
@@ -25,3 +26,15 @@ def original_scale(scaled_data, scaler):
     original_data = scaled_data * mean_scale
     
     return original_data
+
+def writeOutput(result, name):
+        df = pd.DataFrame(result)
+        now = datetime.datetime.now()
+        f = open(name, 'w')
+        f.write('# Michele Di Niccola, Valerio Russo\n')
+        f.write('# team-name\n')
+        f.write('# ML-CUP24\n')
+        f.write('# '+str(now.day)+'/'+str(now.month)+'/'+str(now.year)+'\n')
+        df.index += 1 
+        df.to_csv(f, sep=',', encoding='utf-8', header = False)
+        f.close()
