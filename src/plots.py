@@ -74,8 +74,6 @@ def plot_training_history_Monk(history, path):
     ax2.set_title('MSE vs Epoche')
     ax2.legend()
     ax2.grid(True)
-
-    plt.suptitle('Performance Rete Neurale MONK-1')
     plt.tight_layout()
     plt.savefig(f'{path}/training_history_MONK.png')
     plt.close()

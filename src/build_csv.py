@@ -32,7 +32,7 @@ def writeOutput(result, name):
         now = datetime.datetime.now()
         f = open(name, 'w')
         f.write('# Michele Di Niccola, Valerio Russo\n')
-        f.write('# team-name\n')
+        f.write('# Risi Scotti\n')
         f.write('# ML-CUP24\n')
         f.write('# '+str(now.day)+'/'+str(now.month)+'/'+str(now.year)+'\n')
         df.index += 1 

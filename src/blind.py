@@ -10,7 +10,7 @@ def main():
     model.fit(X, Y, shuffle = True, epochs=500, batch_size=12)
     PD = model.predict(X_test)
     PD = scaler.inverse_transform(PD)
-    writeOutput(PD, "./datasets/team-name_ML-CUP24-TS.csv")
+    writeOutput(PD, "./datasets/Risi_Scotti_ML-CUP24-TS.csv")
 
 if __name__ == "__main__":
     main()
