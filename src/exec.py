@@ -11,9 +11,16 @@ def main():
     batch_size = 24
     # Task, nmonk, fixed(True, false), tunertype, units, dropout, num_layers, units_hidden, learning_rate, momentum, reg, batch_size
     #NN("CUP", 1, True, units, dropout, num_layers, learning_rate, momentum, reg, batch_size)
+<<<<<<< HEAD
+    #Ridge('CUP', 1, False)
+    Ridge('MONK', 1, False)
+    Ridge('MONK', 2, False)
+    Ridge('MONK', 3, False)
+=======
     NN('MONK', 1, False)
     NN('MONK', 2, False)
     NN('MONK', 3, False)
     NN('CUP', 2, False)
+>>>>>>> aa9b1581d30be0bae398fbe2dc6821af1f350522
 if __name__ == '__main__':
     main()
