@@ -11,12 +11,16 @@ def build_model_nn_ranged_tuner(task):
             actfun = 'linear'
             loss = 'mse'
             metrics=['mse', mean_euclidean_error]
+            units = hp.Int('units', min_value=32, max_value=128, step=32)
+            num_layers = hp.Int('num_layers', min_value=1, max_value=3, step=1)
         elif task == 'MONK':
             input_shape = (17,)
             output_shape = 1
             actfun = 'sigmoid'
             loss = 'binary_crossentropy'
             metrics=['accuracy', 'mse']
+            units = 4
+            num_layers = 0
         
         """Costruisce il modello con iperparametri configurabili."""
         model = keras.Sequential()
@@ -27,7 +31,7 @@ def build_model_nn_ranged_tuner(task):
         
         # Primo livello denso
         model.add(keras.layers.Dense(
-            units=hp.Int('units', min_value=32, max_value=128, step=32),
+            units=units,
             activation='relu',
             kernel_regularizer = regularizers.l2(reg)
         ))
@@ -35,10 +39,9 @@ def build_model_nn_ranged_tuner(task):
         # Dropout
         model.add(keras.layers.Dropout(hp.Float('dropout', 0, 0.3, step=0.1)))
         
-        num_layers = hp.Int('num_layers', min_value=1, max_value=3, step=1)  # Ricerca da 1 a 10 layer
         for _ in range(num_layers):
             model.add(keras.layers.Dense(
-                units=hp.Int('units', min_value=32, max_value=128, step=32),
+                units=units,
                 activation='relu',
                 kernel_regularizer = regularizers.l2(reg)
             ))
