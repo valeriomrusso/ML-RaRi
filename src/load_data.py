@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.model_selection import train_test_split
 
 def load_and_preprocess_data_CUP(filepath):
@@ -41,12 +41,17 @@ def splitted_monk_data(monk):
     X_test = test_data[:, 1:]
     Y_test = test_data[:, 0]
 
-    scalerX = StandardScaler().fit(X_train)
-    X_train = scalerX.transform(X_train)
-    X_test = scalerX.transform(X_test)
+    # One-Hot Encoding
+    encoder = OneHotEncoder()
+    X_train_enc = encoder.fit_transform(X_train).toarray()
+    X_test_enc = encoder.fit_transform(X_test).toarray()
+    
+    scalerX = StandardScaler().fit(X_train_enc)
+    X_train_enc = scalerX.transform(X_train_enc)
+    X_test_enc = scalerX.transform(X_test_enc)
 
 
-    return X_train, X_test, Y_train, Y_test
+    return X_train_enc, X_test_enc, Y_train, Y_test
 
 def load_blind_test(train, test):
     train_data = np.genfromtxt(train, delimiter=',')
