@@ -11,9 +11,9 @@ def main():
     batch_size = 24
     # Task, nmonk, fixed(True, false), tunertype, units, dropout, num_layers, units_hidden, learning_rate, momentum, reg, batch_size
     #NN("CUP", 1, True, units, dropout, num_layers, learning_rate, momentum, reg, batch_size)
-    NN('MONK', 1, False)
-    NN('MONK', 2, False)
-    NN('MONK', 3, False)
-    NN('CUP', 2, False)
+    #Ridge('CUP', 1, False)
+    Ridge('MONK', 1, False)
+    Ridge('MONK', 2, False)
+    #Ridge('MONK', 3, False)
 if __name__ == '__main__':
     main()
