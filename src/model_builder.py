@@ -12,7 +12,7 @@ def build_model_nn_ranged_tuner(task):
             loss = 'mse'
             metrics=['mse', mean_euclidean_error]
         elif task == 'MONK':
-            input_shape = (6,)
+            input_shape = (17,)
             output_shape = 1
             actfun = 'sigmoid'
             loss = 'binary_crossentropy'
@@ -70,7 +70,7 @@ def build_model_nn_fixed(units, dropout, num_layers, learning_rate, reg, task):
         metrics=['mse', mean_euclidean_error]
         loss = 'mse'
     elif task == 'MONK':
-        input_shape = (6,)
+        input_shape = (17,)
         output_shape = 1
         actfun = 'sigmoid'
         metrics=['accuracy', 'mse']
@@ -114,7 +114,7 @@ def build_model_ridge_ranged_tuner(task):
             metrics=['mse', mean_euclidean_error]
             loss = 'mse'
         elif task == 'MONK':
-            input_shape = (6,)
+            input_shape = (17,)
             output_shape = 1
             actfun = 'sigmoid'
             metrics=['accuracy', 'mse']
@@ -136,7 +136,7 @@ def build_model_ridge_fixed(reg, learning_rate, task):
         metrics=['mse', mean_euclidean_error]
         loss = 'mse'
     elif task == 'MONK':
-        input_shape = (6,)
+        input_shape = (17,)
         output_shape = 1
         actfun = 'sigmoid'
         metrics=['accuracy', 'mse']

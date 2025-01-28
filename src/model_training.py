@@ -5,7 +5,7 @@ from model_builder import build_model_nn_ranged_tuner, build_model_ridge_ranged_
 
 class Random(kt.tuners.RandomSearch):
   def run_trial(self, trial, *args, **kwargs):
-    kwargs['batch_size'] = trial.hyperparameters.Int('batch_size', 8, 32, step = 2)
+    kwargs['batch_size'] = trial.hyperparameters.Int('batch_size', 16, 128, step = 16)
     #kwargs['epochs'] = trial.hyperparameters.Int('epochs', 10, 30)
     return super(Random, self).run_trial(trial, *args, **kwargs)
   
