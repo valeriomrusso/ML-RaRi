@@ -14,6 +14,6 @@ def main():
     #Ridge('CUP', 1, False)
     Ridge('MONK', 1, False)
     Ridge('MONK', 2, False)
-    #Ridge('MONK', 3, False)
+    Ridge('MONK', 3, False)
 if __name__ == '__main__':
     main()
