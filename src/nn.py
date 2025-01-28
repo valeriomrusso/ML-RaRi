@@ -16,6 +16,7 @@ def NN(task, monktype=None, fixed=None, units=None, dropout=None, num_layers= No
     elif task == 'MONK':
         filepath = f"monks-{monktype}"
         X_train, X_test, Y_train, Y_test = splitted_monk_data(filepath)
+        scalerY = None
         name = f'{task}{monktype}'
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")

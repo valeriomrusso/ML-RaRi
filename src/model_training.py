@@ -31,7 +31,7 @@ def train_model_ranged(fold_no, build_model, x_train, y_train, x_val, y_val, tas
         tuner = Random(
         build_fn,
         objective=objective,
-        max_trials=20,  # Più prove per una maggiore diversità
+        max_trials=50,  # Più prove per una maggiore diversità
         overwrite=True,
         directory=temp_dir,
         project_name=f'fold_{fold_no}'
