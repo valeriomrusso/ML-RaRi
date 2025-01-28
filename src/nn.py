@@ -27,7 +27,7 @@ def NN(task, monktype=None, fixed=None, units=None, dropout=None, num_layers= No
     os.makedirs(path, exist_ok=True)
 
     if fixed:
-        final_model = build_model_nn_fixed(units, dropout, num_layers, units_hidden, learning_rate, momentum, reg, task)
+        final_model = build_model_nn_fixed(units, dropout, num_layers, learning_rate, momentum, reg, task)
         history = train_model_fixed(final_model, batch_size, X_train, X_test, Y_train, Y_test)
         final_dict = {}
         final_dict['batch_size'] = batch_size
@@ -50,7 +50,7 @@ def NN(task, monktype=None, fixed=None, units=None, dropout=None, num_layers= No
             final_dict['val_mse'] = history.history['val_mse'][-1]
         csv_builder(f'{path}/best_hps_model_fixed.csv', final_dict)
     else:
-        history, model = CV(X_train, X_test, Y_train, Y_test, scalerY, task, "NN", path)
+        history, model = CV(X_train, X_test, Y_train, Y_test, task, "NN", path, scalerY)
     
     if task == 'CUP':
         plot_training_history_CUP(history, scalerY, path)

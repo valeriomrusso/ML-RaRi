@@ -45,7 +45,7 @@ def Ridge(task, monktype = None, fixed = None, learning_rate = None, momentum = 
             final_dict['val_mse'] = history.history['val_mse'][-1]
         csv_builder(f'{path}/best_hps_model_fixed.csv', final_dict)
     else:
-        history, model = CV(X_train, X_test, Y_train, Y_test, scalerY, task, "Ridge")
+        history, model = CV(X_train, X_test, Y_train, Y_test, task, "Ridge", path, scalerY)
     if task == 'CUP':
         plot_training_history_CUP(history, scalerY, path)
     elif task == 'MONK':

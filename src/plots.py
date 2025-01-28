@@ -9,8 +9,8 @@ def plot_training_history_CUP(history, scaler, path, window_size=5):
     """Visualizza l'andamento del training con riscalatura di MSE e MEE, riportando i valori alla scala originale."""
     
     # Estrai la loss e la MEE
-    train_mse = np.array(history.history['loss'])
-    val_mse = np.array(history.history['val_loss'])
+    train_mse = np.array(history.history['mse'])
+    val_mse = np.array(history.history['val_mse'])
     train_mee = np.array(history.history['mean_euclidean_error'])
     val_mee = np.array(history.history['val_mean_euclidean_error'])
 

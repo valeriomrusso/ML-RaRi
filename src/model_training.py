@@ -3,11 +3,17 @@ import keras
 import tempfile
 from model_builder import build_model_nn_ranged_tuner, build_model_ridge_ranged_tuner
 
-class MyTuner(kt.tuners.RandomSearch):
+class Random(kt.tuners.RandomSearch):
   def run_trial(self, trial, *args, **kwargs):
     kwargs['batch_size'] = trial.hyperparameters.Int('batch_size', 8, 32, step = 2)
     #kwargs['epochs'] = trial.hyperparameters.Int('epochs', 10, 30)
-    return super(MyTuner, self).run_trial(trial, *args, **kwargs)
+    return super(Random, self).run_trial(trial, *args, **kwargs)
+  
+'''class Grid(kt.tuners.GridSearch):
+  def run_trial(self, trial, *args, **kwargs):
+    kwargs['batch_size'] = trial.hyperparameters.Int('batch_size', 8, 32, step = 8)
+    #kwargs['epochs'] = trial.hyperparameters.Int('epochs', 10, 30)
+    return super(Grid, self).run_trial(trial, *args, **kwargs)'''
 
 def train_model_ranged(fold_no, build_model, x_train, y_train, x_val, y_val, task):
     """Training con gestione errori"""
@@ -21,10 +27,11 @@ def train_model_ranged(fold_no, build_model, x_train, y_train, x_val, y_val, tas
         elif task == 'MONK':
             objective = 'val_accuracy'
         temp_dir = tempfile.mkdtemp()
-        tuner = MyTuner(
+        
+        tuner = Random(
         build_fn,
         objective=objective,
-        max_trials=2,  # Più prove per una maggiore diversità
+        max_trials=20,  # Più prove per una maggiore diversità
         overwrite=True,
         directory=temp_dir,
         project_name=f'fold_{fold_no}'
@@ -49,7 +56,7 @@ def train_model_fixed(model, batch_size, X_train, X_val, Y_train, Y_val):
     final_history = model.fit(
         X_train, Y_train,
         batch_size=batch_size,
-        epochs=200,  # Puoi regolare il numero di epoche
+        epochs=2000,  # Puoi regolare il numero di epoche
         validation_data=(X_val, Y_val),  # Usa il test set per la validazione finale
         callbacks=[keras.callbacks.EarlyStopping('val_loss', patience=5)]
     )

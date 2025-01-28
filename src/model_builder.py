@@ -38,7 +38,7 @@ def build_model_nn_ranged_tuner(task):
         num_layers = hp.Int('num_layers', min_value=1, max_value=3, step=1)  # Ricerca da 1 a 10 layer
         for _ in range(num_layers):
             model.add(keras.layers.Dense(
-                units=hp.Int('units_hidden', min_value=32, max_value=128, step=32),
+                units=hp.Int('units', min_value=32, max_value=128, step=32),
                 activation='relu',
                 kernel_regularizer = regularizers.l2(reg)
             ))
@@ -60,7 +60,7 @@ def build_model_nn_ranged_tuner(task):
     return build_model
 
 
-def build_model_nn_fixed(units, dropout, num_layers, units_hidden, learning_rate, reg, task):
+def build_model_nn_fixed(units, dropout, num_layers, learning_rate, reg, task):
     """Costruisce il modello con iperparametri configurabili."""
     model = keras.Sequential()
     if task == 'CUP':
@@ -90,7 +90,7 @@ def build_model_nn_fixed(units, dropout, num_layers, units_hidden, learning_rate
     
     for _ in range(num_layers):
         model.add(keras.layers.Dense(
-            units=units_hidden,
+            units=units,
             activation='relu',
             kernel_regularizer = regularizers.l2(reg)
         ))

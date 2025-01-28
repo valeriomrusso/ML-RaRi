@@ -1,2 +1,0 @@
-n_centers,gamma,learning_rate,batch_size,fold,train_loss,val_loss
-155,0.19,0.060000000000000005,60,5,0.048203401267528534,0.10689837485551834

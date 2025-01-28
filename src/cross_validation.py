@@ -5,7 +5,7 @@ from build_csv import csv_builder, original_scale
 import keras
 import pandas as pd
 
-def CV(X_train, X_test, Y_train, Y_test, scalerY, task, model, path):
+def CV(X_train, X_test, Y_train, Y_test, task, model, path, scalerY=None):
     kfold = KFold(n_splits=5, shuffle=True, random_state=42)
     fold_no = 1
     hyperparameters_summary = []
@@ -62,7 +62,7 @@ def CV(X_train, X_test, Y_train, Y_test, scalerY, task, model, path):
     final_history = final_model.fit(
         X_train, Y_train,
         batch_size=best_hparams.get('batch_size'),
-        epochs=200,  # Puoi regolare il numero di epoche
+        epochs=2000,  # Puoi regolare il numero di epoche
         validation_data=(X_test, Y_test),  # Usa il test set per la validazione finale
         callbacks=[keras.callbacks.EarlyStopping('val_loss', patience=5)]
     )
