@@ -1,0 +1,2 @@
+n_centers,gamma,learning_rate,batch_size,fold,mse,val_mse,mean_euclidean_error,val_mean_euclidean_error
+125,0.22,0.28,48,4,0.18880158858599283,0.4557423773613037,0.6787818508542773,0.8575121332574434

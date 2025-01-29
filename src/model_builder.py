@@ -148,3 +148,76 @@ def mean_euclidean_error(y_true, y_pred):
     diff = tf.square(y_pred - y_true)
     mean_diff = tf.reduce_mean(diff, axis=-1)
     return tf.sqrt(mean_diff)
+
+def rbf_activation(x, centers, gamma):
+    # RBF activation
+    return tf.exp(-gamma * tf.reduce_sum(tf.square(x[:, None, :] - centers), axis=-1))
+
+# Function to build a RBF Network with tunable hyperparameters
+def build_model_rbf_ranged_tuner(task):
+    def build_model(hp):
+        if task == 'CUP':
+            input_dim = 12
+            output_dim = 3
+            actfun = 'linear'
+            loss = 'mse'
+            metrics=['mse', mean_euclidean_error]
+        elif task == 'MONK':
+            input_dim = 17
+            output_dim = 1
+            actfun = 'sigmoid'
+            loss = 'binary_crossentropy'
+            metrics=['accuracy', 'mse']
+
+        n_centers = hp.Int('n_centers', min_value=100, max_value=200, step=5)
+        gamma = hp.Float('gamma', min_value=0.1, max_value=0.3, step=0.005)
+        learning_rate = hp.Float('learning_rate', min_value=0.01, max_value=0.4, step=0.01)
+        
+        model = keras.Sequential()
+
+        model.add(keras.layers.Input(shape=(input_dim,)))
+
+        # RBF hidden layer
+        centers = tf.Variable(np.random.randn(n_centers, input_dim), dtype=tf.float32)  # Centri randomici
+        model.add(keras.layers.Lambda(lambda x: rbf_activation(x, centers, gamma)))
+
+        model.add(keras.layers.Dense(output_dim, activation=actfun))
+
+        optimizer = keras.optimizers.Adam(learning_rate=learning_rate)
+
+        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+
+        return model
+    return build_model
+
+# Function to build a RBF Network with fixed hyperparameters
+def build_model_rbf_fixed(n_centers, gamma, learning_rate, task):
+    def build_model(hp):
+        if task == 'CUP':
+            input_dim = 12
+            output_dim = 3
+            actfun = 'linear'
+            loss = 'mse'
+            metrics=['mse', mean_euclidean_error]
+        elif task == 'MONK':
+            input_dim = 17
+            output_dim = 1
+            actfun = 'sigmoid'
+            loss = 'binary_crossentropy'
+            metrics=['accuracy', 'mse']
+
+        model = keras.Sequential()
+
+        model.add(keras.layers.Input(shape=(input_dim,)))
+
+        centers = tf.Variable(np.random.randn(n_centers, input_dim), dtype=tf.float32)
+        model.add(keras.layers.Lambda(lambda x: rbf_activation(x, centers, gamma)))
+
+        model.add(keras.layers.Dense(output_dim, activation=actfun))
+
+        optimizer = keras.optimizers.Adam(learning_rate=learning_rate)
+
+        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+
+        return model
+    return build_model

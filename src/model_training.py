@@ -1,7 +1,7 @@
 import keras_tuner as kt
 import keras
 import tempfile
-from model_builder import build_model_nn_ranged_tuner, build_model_ridge_ranged_tuner
+from model_builder import build_model_nn_ranged_tuner, build_model_ridge_ranged_tuner, build_model_rbf_ranged_tuner
 
 # Define a custom Random Search Tuner class that modifies the `batch_size` parameter
 class Random(kt.tuners.RandomSearch):
@@ -23,6 +23,8 @@ def train_model_ranged(fold_no, build_model, x_train, y_train, x_val, y_val, tas
             build_fn = build_model_nn_ranged_tuner(task)
         elif build_model == build_model_ridge_ranged_tuner:
             build_fn = build_model_ridge_ranged_tuner(task)
+        elif build_model == build_model_rbf_ranged_tuner:
+            build_fn = build_model_rbf_ranged_tuner(task)
         if task == 'CUP':
             objective = 'val_loss'
         elif task == 'MONK':

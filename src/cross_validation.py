@@ -22,6 +22,8 @@ def CV(X_train, X_test, Y_train, Y_test, task, model, path, scalerY):
             trmodel, tuner = train_model_ranged(fold_no, build_model_ridge_ranged_tuner, x_train, y_train, x_val, y_val, task)
         elif model == "NN":
             trmodel, tuner = train_model_ranged(fold_no, build_model_nn_ranged_tuner, x_train, y_train, x_val, y_val, task)
+        elif model == "RBF":
+            trmodel, tuner = train_model_ranged(fold_no, build_model_rbf_ranged_tuner, x_train, y_train, x_val, y_val, task)
         
         # Get the best hyperparameters and the best model
         best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
@@ -65,6 +67,9 @@ def CV(X_train, X_test, Y_train, Y_test, task, model, path, scalerY):
         final_model = build_model(best_hparams)
     elif model == "NN":
         build_model = build_model_nn_ranged_tuner(task)
+        final_model = build_model(best_hparams)
+    elif model == "RBF":
+        build_model = build_model_rbf_ranged_tuner(task)
         final_model = build_model(best_hparams)
     
     # Train the final model on the entire training set

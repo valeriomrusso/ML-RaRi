@@ -1,5 +1,6 @@
 from nn import NN
 from ridge import Ridge
+from rbf import RBF
 
 def main():
     # Define hyperparameters
@@ -12,6 +13,6 @@ def main():
     batch_size = 24
     
     # Run the NN model for the CUP task with predefined configurations (nmonk = 2, fixed = False)
-    NN('CUP', 2, False)
+    RBF('MONK', 2, False)
 if __name__ == '__main__':
     main()

@@ -1,0 +1,2 @@
+n_centers,gamma,learning_rate,batch_size,fold,accuracy,val_accuracy,mse,val_mse
+145,0.125,0.31,80,5,1.0,0.9282407164573669,0.0014203038299456239,0.05253669247031212
