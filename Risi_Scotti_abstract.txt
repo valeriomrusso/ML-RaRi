@@ -1,0 +1,2 @@
+The adopted validation procedure consisted of a 5-fold cross validation with random search (50 hp configurations per fold). Subsequently, the best model was selected and trained on the whole development set and then tested on the internal test set. Lastly, the model was retrained on the whole ML-CUP24-TR dataset before being used for predicting the outputs of the blind test.
+The final model is a 4 hidden layer network with 32 units each and ReLu activation function.

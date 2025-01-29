@@ -7,7 +7,10 @@ from cross_validation import CV
 import os
 from datetime import datetime
 
+#Trains a Ridge regression model based on the task (CUP or MONK) with either fixed or ranged hyperparameters.
 def Ridge(task, monktype = None, fixed = None, learning_rate = None, momentum = None, reg = None, batch_size = None):
+    
+    # Load data depending on the task
     if task == 'CUP':
         filepath = './datasets/ML-CUP24-TR.csv'
         X_train, X_test, Y_train, Y_test, scalerX, scalerY = load_and_preprocess_data_CUP(filepath)
@@ -19,6 +22,7 @@ def Ridge(task, monktype = None, fixed = None, learning_rate = None, momentum = 
         name = f'{task}{monktype}'
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    # Set path for saving the results
     if fixed:
         p = "fixed"
     else:
@@ -27,6 +31,7 @@ def Ridge(task, monktype = None, fixed = None, learning_rate = None, momentum = 
     os.makedirs(path, exist_ok=True)
 
     if fixed:
+        # Build and train the Ridge model with fixed hyperparameters
         model = build_model_ridge_fixed(reg, learning_rate, momentum, task)
         history = train_model_fixed(model, batch_size, X_train, X_test, Y_train, Y_test)
         final_dict = {}
@@ -34,6 +39,8 @@ def Ridge(task, monktype = None, fixed = None, learning_rate = None, momentum = 
         final_dict['reg'] = reg
         final_dict['learning_rate'] = learning_rate
         final_dict['momentum'] = momentum
+
+        # If the task is CUP, rescale the metrics back to original scale and store them
         if task == 'CUP':
             final_dict['mse'] = original_scale(history.history['mse'][-1], scalerY)
             final_dict['val_mse'] = original_scale(history.history['val_mse'][-1], scalerY)
@@ -44,9 +51,13 @@ def Ridge(task, monktype = None, fixed = None, learning_rate = None, momentum = 
             final_dict['val_accuracy'] = history.history['val_accuracy'][-1]  
             final_dict['mse'] = history.history['mse'][-1]
             final_dict['val_mse'] = history.history['val_mse'][-1]
+        # Save the results to a CSV file
         csv_builder(f'{path}/best_hps_model_fixed.csv', final_dict)
     else:
+        # If using ranged hyperparameters, perform cross-validation
         history, model = CV(X_train, X_test, Y_train, Y_test, task, "Ridge", path, scalerY)
+    
+    # Plot training results based on the task
     if task == 'CUP':
         plot_training_history_CUP(history, scalerY, path)
     elif task == 'MONK':
