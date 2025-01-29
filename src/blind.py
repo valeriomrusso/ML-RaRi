@@ -21,7 +21,7 @@ def main():
     PD = scaler.inverse_transform(PD)
     
     # Save the predictions to a CSV file
-    writeOutput(PD, "./datasets/Risi_Scotti_ML-CUP24-TS.csv")
+    writeOutput(PD, "./Risi_Scotti_ML-CUP24-TS.csv")
 
 if __name__ == "__main__":
     main()
